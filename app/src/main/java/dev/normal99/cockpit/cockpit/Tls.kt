@@ -20,6 +20,8 @@ fun sha256Fingerprint(cert: X509Certificate): String =
  * Accepts publicly trusted certificates (e.g. Tailscale's HTTPS certs) as usual, and otherwise only the one
  * certificate the person pinned for this host (Cockpit's default self-signed cert). Trust on first use.
  */
+// Lint's CustomX509TrustManager: deliberate. This only adds one exact certificate (by SHA-256) that the person confirmed.
+@android.annotation.SuppressLint("CustomX509TrustManager")
 class PinningTrustManager(private val pinned: String?) : X509TrustManager {
     private val system: X509TrustManager = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
         .apply { init(null as KeyStore?) }

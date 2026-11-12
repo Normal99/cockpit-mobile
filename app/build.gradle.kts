@@ -35,6 +35,13 @@ android {
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all {
+            it.systemProperty("roborazzi.test.record", "true")
+            // Screenshots of every screen against the demo host: SHOTS=1 ./gradlew testDebugUnitTest --tests '*ScreenshotTest*'
+            it.environment("SHOTS", System.getenv("SHOTS") ?: "")
+            it.maxHeapSize = "2g"
+        }
     }
 }
 
@@ -57,6 +64,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.10.2")
     implementation("androidx.work:work-runtime-ktx:2.12.0")
     implementation("androidx.biometric:biometric:1.1.0")
+    implementation("androidx.fragment:fragment-ktx:1.8.9")
     implementation("com.squareup.okhttp3:okhttp:5.5.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
@@ -64,4 +72,10 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
     testImplementation("com.squareup.okhttp3:mockwebserver3:5.5.1")
+    testImplementation("org.robolectric:robolectric:4.17")
+    testImplementation("io.github.takahirom.roborazzi:roborazzi:1.78.0")
+    testImplementation("io.github.takahirom.roborazzi:roborazzi-compose:1.78.0")
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation("com.squareup.okhttp3:mockwebserver3:5.5.1")
 }

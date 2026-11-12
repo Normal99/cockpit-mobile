@@ -166,9 +166,8 @@ class CockpitSession(
         val body = resp.body.string()
         when (resp.code) {
             200 -> {
-                val cookies = resp.headers("Set-Cookie").map { it.substringBefore(';').trim() }.filter { it.contains('=') }
-                if (cookies.isEmpty()) throw CockpitException("authentication-failed", "Cockpit did not start a session")
-                return cookies
+                // Normally a "cockpit" session cookie. A cockpit-ws run with --local-session needs no login and sets none.
+                return resp.headers("Set-Cookie").map { it.substringBefore(';').trim() }.filter { it.contains('=') }
             }
             401, 403 -> {
                 val problem = parseObject(body).str("problem") ?: "authentication-failed"
@@ -289,7 +288,7 @@ class CockpitSession(
     }
 
     /** The cookie for WebViews (CookieManager wants "name=value; Path=/" per cookie). */
-    fun webCookies(): List<String> = cookies.map { "$it; Path=/; Secure; HttpOnly" }
+    fun webCookies(): List<String> = cookies.map { "$it; Path=/" + if (endpoint.base.isHttps) "; Secure; HttpOnly" else "; HttpOnly" }
 
     /** Raw HTTP GET within the session, e.g. manifests.json. */
     suspend fun httpGet(path: String): String = withContext(Dispatchers.IO) {
