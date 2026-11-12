@@ -51,6 +51,10 @@ Needs JDK 17+ and the Android SDK (platform 37).
 ./gradlew assembleRelease               # app/build/outputs/apk/release/app-release.apk (debug-key signed, for sideloading)
 ```
 
+`tools/emulator.sh` boots a headless emulator (no display needed), installs the debug build and starts it;
+`tools/emulator.sh shot NAME` saves a screenshot. It uses `-gpu lavapipe` because the emulator's default software GPU
+crashes on some older CPUs.
+
 Debug builds have a **demo host** (a pretend Cockpit inside the app) on the first screen, to try everything without a server.
 
 Tests:
