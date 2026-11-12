@@ -54,6 +54,10 @@ private val INJECT = """
 })();
 """.trimIndent()
 
+/** WebView reports the URL as the title when a page has no <title>; keep the menu label then. */
+private fun isRealTitle(view: WebView, title: String) =
+    title.isNotBlank() && !title.startsWith("http") && view.url?.contains(title) != true
+
 /**
  * Any Cockpit page (Cockpit's own or a mod such as the Claude page) running standalone in a WebView.
  * It shares the app's login: the session cookie is handed over, so the page's cockpit.js connects to the same
@@ -119,7 +123,7 @@ fun CockpitWebPage(conn: HostConnection, path: String, modifier: Modifier = Modi
                         override fun onPageFinished(view: WebView, url: String?) {
                             view.evaluateJavascript(INJECT, null)
                             canGoBack = view.canGoBack()
-                            view.title?.takeIf { it.isNotBlank() && !it.startsWith("http") }?.let(onTitle)
+                            view.title?.takeIf { isRealTitle(view, it) }?.let(onTitle)
                         }
                     }
                     webChromeClient = object : WebChromeClient() {
@@ -128,7 +132,7 @@ fun CockpitWebPage(conn: HostConnection, path: String, modifier: Modifier = Modi
                         }
 
                         override fun onReceivedTitle(view: WebView, title: String?) {
-                            title?.takeIf { it.isNotBlank() && !it.startsWith("http") }?.let(onTitle)
+                            title?.takeIf { isRealTitle(view, it) }?.let(onTitle)
                         }
 
                         override fun onShowFileChooser(view: WebView, callback: ValueCallback<Array<Uri>>, params: FileChooserParams): Boolean {
