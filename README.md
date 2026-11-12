@@ -65,3 +65,10 @@ Tests:
   `app/build/shots/` and checks that tapping Approve moves a request to Recent;
 - `COCKPIT_E2E_URL=https://host:9090 COCKPIT_E2E_USER=… COCKPIT_E2E_PASSWORD=… ./gradlew testDebugUnitTest --tests '*EndToEnd*'`
   runs against a real Cockpit.
+
+## License
+
+[GPL-3.0](LICENSE). Contributions welcome: open an issue or a pull request.
+
+The **Claude** tab is a native screen for one particular custom Cockpit package (a page that manages Claude Code sessions
+and a root-request broker). It only appears on hosts that have that package; everything else works with any Cockpit.
