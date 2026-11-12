@@ -40,6 +40,9 @@ fun Throwable.friendlyMessage(): String {
         if (t is java.net.UnknownHostException) return "Can't find that host name. Check the address (and Tailscale)."
         if (t is java.net.ConnectException) return "Can't reach the host. Is Cockpit running and the port right?"
         if (t is java.net.SocketTimeoutException) return "The host did not answer in time."
+        if (t is java.net.ProtocolException && t.message?.contains("403") == true) {
+            return "Cockpit refused this address. Use the address you use in the browser, or add it to Origins in /etc/cockpit/cockpit.conf."
+        }
         t = t.cause
     }
     return message ?: toString()
