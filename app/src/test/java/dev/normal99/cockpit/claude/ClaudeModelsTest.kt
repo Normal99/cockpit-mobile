@@ -70,6 +70,13 @@ class ClaudeModelsTest {
     }
 
     @Test fun activityMergesLogsNewestFirst() {
+        // broker-activity.log has local times without an offset, read in the device's zone: pin it for the test
+        val saved = java.util.TimeZone.getDefault()
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Europe/Oslo"))
+        try { checkActivity() } finally { java.util.TimeZone.setDefault(saved) }
+    }
+
+    private fun checkActivity() {
         val st = ClaudeState(
             status = Status(null, emptyList(), emptyList(), listOf(StatusEvent(parseIso("2026-11-11T22:43:17+01:00"), "start", "main"))),
             logs = mapOf(
