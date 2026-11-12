@@ -1,0 +1,7 @@
+<resources>
+    <!-- Follows the system's light/dark setting (WebView pages see it as prefers-color-scheme); Compose draws everything else. -->
+    <style name="AppTheme" parent="@android:style/Theme.DeviceDefault.DayNight">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
